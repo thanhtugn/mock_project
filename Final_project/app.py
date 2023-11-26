@@ -7,6 +7,7 @@ from keras.models import load_model
 from tensorflow.python.keras.utils import np_utils
 from streamlit_drawable_canvas import st_canvas
 import streamlit as st
+import time
 
 model = load_model('dense_model.h5')
 
@@ -50,6 +51,19 @@ with col1:
                 processed_image = process_image(img)
                 prediction = model.predict(processed_image).argmax()
                 st.write(f"Predicted digit: {prediction}")
+            if st.button('Save'):
+                # Get the current time
+                timestamp = time.time()
+                # Save the image with a unique filename
+                img.save(f'imgs/{prefix}_{timestamp}.png')
+                # Get a list of all files in the directory
+                files = os.listdir('imgs')
+                # Filter the list to only include files that start with the prefix
+                images = [file for file in files if file.startswith(prefix)]
+                # Count the number of images
+                image_counter = len(images)
+                # Display the counter
+                st.write(f"Images saved: {image_counter}")
 
 with col_space:
     st.write("")
